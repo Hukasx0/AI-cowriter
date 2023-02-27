@@ -6,7 +6,7 @@
 ; you can change that if you want to use another ai
 (defconst AImodel "text-davinci-003")
 ; you can change that if you want to use more or less tokens per request
-(defconst MAXtokens 10)
+(defconst MAXtokens 50)
 ; ypu can change that if you want to use other temperature
 (defconst Temperature 0)
 
@@ -27,6 +27,12 @@
 	 (prog1
 	     (json-read)
 	   (kill-buffer)))))
+(defun code-complete-ai ()
+  "Send your selected code to AI and get corrected code"
+  (interactive)
+  (let ((codeResp (aiQuery (buffer-substring-no-properties (region-beginning) (region-end)))))
+  (kill-region (region-beginning) (region-end))
+  (insert (cdr (assoc 'text (aref (cdr (assoc 'choices codeResp)) 0))))))
 
 (defun ask-ai (query)
   "Ask OpenAI question and get answer"
